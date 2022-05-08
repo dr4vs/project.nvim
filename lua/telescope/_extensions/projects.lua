@@ -18,6 +18,8 @@ local history = require("project_nvim.utils.history")
 local project = require("project_nvim.project")
 local config = require("project_nvim.config")
 
+local session_manager = require('session_manager.utils')
+
 ----------
 -- Actions
 ----------
@@ -139,6 +141,21 @@ local function delete_project(prompt_bufnr)
   end
 end
 
+local function load_last_session(prompt_bufnr)
+  local project_path, cd_successful = change_working_directory(prompt_bufnr, true)
+  if cd_successful then
+    local session_name = session_manager.dir_to_session_filename(project_path)
+    if session_name:exists() then
+      session_manager.load_session(session_name.filename, 0)
+    else
+      local ok, _ = pcall(require, 'notify')
+      if ok then
+        vim.notify("Session not found, for selected project", "warn")
+      end
+    end
+  end
+end
+
 ---Main entrypoint for Telescope.
 ---@param opts table
 local function projects(opts)
@@ -156,6 +173,7 @@ local function projects(opts)
       map("n", "s", search_in_project_files)
       map("n", "r", recent_project_files)
       map("n", "w", change_working_directory)
+      map("n", "l", load_last_session)
 
       map("i", "<c-f>", find_project_files)
       map("i", "<c-b>", browse_project_files)
@@ -163,6 +181,7 @@ local function projects(opts)
       map("i", "<c-s>", search_in_project_files)
       map("i", "<c-r>", recent_project_files)
       map("i", "<c-w>", change_working_directory)
+      map("i", "<CR>", load_last_session)
 
       local on_project_selected = function()
         find_project_files(prompt_bufnr)

@@ -1,7 +1,7 @@
 # 🗃️ project.nvim
 
 **project.nvim** is an all in one neovim plugin written in lua that provides
-superior project management.
+superior project management. (Original project [project.nvim](https://github.com/ahmedkhalf/project.nvim))
 
 ![Telescope Integration](https://user-images.githubusercontent.com/36672196/129409509-62340f10-4dd0-4c1a-9252-8bfedf2a9945.png)
 
@@ -46,6 +46,7 @@ superior project management.
       },
     })
     ```
+- Integration with session manager ([neovim-session-manager](https://github.com/Shatur/neovim-session-manager)) - as default open last saved state
 
 ## 📦 Installation
 
@@ -55,9 +56,17 @@ Install the plugin with your preferred package manager:
 
 ```vim
 " Vim Script
-Plug 'ahmedkhalf/project.nvim'
+Plug 'dr4vs/project.nvim'
+
+Plug 'Shatur/neovim-session-manager',
+Plug 'nvim-lua/plenary.nvim'
 
 lua << EOF
+  require('session_manager').setup{
+    -- your configuration for session_manager 
+    -- or leave it empty to use the default settings
+    -- refer to the configuration from neovim-session-manager
+  }
   require("project_nvim").setup {
     -- your configuration comes here
     -- or leave it empty to use the default settings
@@ -71,8 +80,17 @@ EOF
 ```lua
 -- Lua
 use {
-  "ahmedkhalf/project.nvim",
+  "dr4vs/project.nvim",
+  require = {
+    'Shatur/neovim-session-manager',
+    'nvim-lua/plenary.nvim'
+  },
   config = function()
+    require('session_manager').setup{
+      -- your configuration for session_manager 
+      -- or leave it empty to use the default settings
+      -- refer to the configuration from neovim-session-manager
+    }
     require("project_nvim").setup {
       -- your configuration comes here
       -- or leave it empty to use the default settings
@@ -186,6 +204,7 @@ require('telescope').load_extension('projects')
 | s           | \<c-s\>     | search\_in\_project\_files |
 | r           | \<c-r\>     | recent\_project\_files     |
 | w           | \<c-w\>     | change\_working\_directory |
+| l           | \<CR\>      | load\_last\_session       |
 
 ## API
 
@@ -202,3 +221,7 @@ print(vim.inspect(recent_projects))
 
 - All pull requests are welcome.
 - If you encounter bugs please open an issue.
+
+## Credits
+
+- Forked from [project.nvim](https://github.com/ahmedkhalf/project.nvim)
