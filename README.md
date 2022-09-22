@@ -24,11 +24,11 @@ superior project management. (Original project [project.nvim](https://github.com
     " Vim Script
     lua << EOF
     require("nvim-tree").setup({
-      update_cwd = true,
+      sync_root_with_cwd = true,
       respect_buf_cwd = true,
       update_focused_file = {
         enable = true,
-        update_cwd = true
+        update_root = true
       },
     })
     EOF
@@ -36,11 +36,11 @@ superior project management. (Original project [project.nvim](https://github.com
     ```lua
     -- lua
     require("nvim-tree").setup({
+      sync_root_with_cwd = true,
       respect_buf_cwd = true,
-      update_cwd = true,
       update_focused_file = {
         enable = true,
-        update_cwd = true
+        update_root = true
       },
     })
     ```
@@ -133,6 +133,12 @@ use {
   -- directory.
   silent_chdir = true,
 
+  -- What scope to change the directory, valid options are
+  -- * global (default)
+  -- * tab
+  -- * win
+  scope_chdir = 'global',
+
   -- Path where project.nvim will store the project history for use in
   -- telescope
   datapath = vim.fn.stdpath("data"),
@@ -150,21 +156,21 @@ for your convenience, I will copy paste them here:
 To specify the root is a certain directory, prefix it with `=`.
 
 ```lua
-detection_methods = { "=src" }
+patterns = { "=src" }
 ```
 
 To specify the root has a certain directory or file (which may be a glob), just
 give the name:
 
 ```lua
-detection_methods = { ".git", "Makefile", "*.sln", "build/env.sh" }
+patterns = { ".git", "Makefile", "*.sln", "build/env.sh" }
 ```
 
 To specify the root has a certain directory as an ancestor (useful for
 excluding directories), prefix it with `^`:
 
 ```lua
-detection_methods = { "^fixtures" }
+patterns = { "^fixtures" }
 ```
 
 To specify the root has a certain directory as its direct ancestor / parent
@@ -172,13 +178,13 @@ To specify the root has a certain directory as its direct ancestor / parent
 `>`:
 
 ```lua
-detection_methods = { ">Latex" }
+patterns = { ">Latex" }
 ```
 
 To exclude a pattern, prefix it with `!`.
 
 ```lua
-detection_methods = { "!.git/worktrees", "!=extras", "!^fixtures", "!build/env.sh" }
+patterns = { "!.git/worktrees", "!=extras", "!^fixtures", "!build/env.sh" }
 ```
 
 List your exclusions before the patterns you do want.
