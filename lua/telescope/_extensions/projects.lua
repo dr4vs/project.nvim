@@ -18,8 +18,8 @@ local history = require("project_nvim.utils.history")
 local project = require("project_nvim.project")
 local config = require("project_nvim.config")
 
-local session_manager = require('session_manager.utils')
-
+local sm_utils = require('session_manager.utils')
+local sm_config = require('session_manager.config')
 ----------
 -- Actions
 ----------
@@ -62,7 +62,7 @@ local function create_finder()
 end
 
 local function change_working_directory(prompt_bufnr, prompt)
-  local selected_entry = state.get_selected_entry(prompt_bufnr)
+  local selected_entry = state.get_selected_entry()
   if selected_entry == nil then
     actions.close(prompt_bufnr)
     return
@@ -124,7 +124,7 @@ local function recent_project_files(prompt_bufnr)
 end
 
 local function delete_project(prompt_bufnr)
-  local selectedEntry = state.get_selected_entry(prompt_bufnr)
+  local selectedEntry = state.get_selected_entry()
   if selectedEntry == nil then
     actions.close(prompt_bufnr)
     return
@@ -144,9 +144,9 @@ end
 local function load_last_session(prompt_bufnr)
   local project_path, cd_successful = change_working_directory(prompt_bufnr, true)
   if cd_successful then
-    local session_name = session_manager.dir_to_session_filename(project_path)
+    local session_name = sm_config.dir_to_session_filename(project_path)
     if session_name:exists() then
-      session_manager.load_session(session_name.filename, 0)
+      sm_utils.load_session(session_name.filename, false)
     else
       local ok, _ = pcall(require, 'notify')
       if ok then
