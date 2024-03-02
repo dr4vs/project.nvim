@@ -129,16 +129,12 @@ local function delete_project(prompt_bufnr)
     actions.close(prompt_bufnr)
     return
   end
-  local choice = vim.fn.confirm("Delete '" .. selectedEntry.value .. "' from project list?", "&Yes\n&No", 2)
+  history.delete_project(selectedEntry)
 
-  if choice == 1 then
-    history.delete_project(selectedEntry)
-
-    local finder = create_finder()
-    state.get_current_picker(prompt_bufnr):refresh(finder, {
-      reset_prompt = true,
-    })
-  end
+  local finder = create_finder()
+  state.get_current_picker(prompt_bufnr):refresh(finder, {
+    reset_prompt = true,
+  })
 end
 
 local function load_last_session(prompt_bufnr)
